@@ -23,6 +23,11 @@ class JSBridgeTest {
         assertTrue(js.contains("window.postMessage")); assertTrue(js.contains("quackback:identify"))
         assertTrue(js.contains("\"id\":\"u\"")); assertFalse(js.contains("avatarURL"))
     }
+    @Test fun `identify anonymous`() {
+        val js = JSBridge.identifyAnonymousCommand()
+        assertTrue(js.contains("window.postMessage")); assertTrue(js.contains("quackback:identify"))
+        assertTrue(js.contains("\"anonymous\":true"))
+    }
     @Test fun `open with board`() {
         val js = JSBridge.openCommand("bugs")
         assertTrue(js.contains("window.postMessage")); assertTrue(js.contains("quackback:open"))

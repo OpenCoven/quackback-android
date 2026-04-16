@@ -21,6 +21,10 @@ internal object JSBridge {
         val p = JSONObject().apply { put("id", userId); put("email", email); name?.let { put("name", it) }; avatarURL?.let { put("avatarURL", it) } }
         return "window.postMessage({type:'quackback:identify',data:$p},'*');"
     }
+    fun identifyAnonymousCommand(): String {
+        val p = JSONObject().apply { put("anonymous", true) }
+        return "window.postMessage({type:'quackback:identify',data:$p},'*');"
+    }
     fun openCommand(board: String?): String {
         if (board != null) {
             val p = JSONObject().apply { put("board", board) }
