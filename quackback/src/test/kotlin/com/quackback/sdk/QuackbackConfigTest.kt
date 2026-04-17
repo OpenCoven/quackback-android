@@ -10,7 +10,7 @@ class QuackbackConfigTest {
         val c = QuackbackConfig(instanceUrl = "https://x.com")
         assertEquals(QuackbackTheme.SYSTEM, c.theme)
         assertEquals(QuackbackPosition.BOTTOM_RIGHT, c.placement)
-        assertNull(c.buttonColor)
+        assertNull(c.locale)
     }
     @Test fun `widget URL has native params`() {
         val c = QuackbackConfig(instanceUrl = "https://x.com")
@@ -21,11 +21,10 @@ class QuackbackConfigTest {
         val c = QuackbackConfig(
             instanceUrl = "https://fb.example.com",
             theme = QuackbackTheme.DARK, placement = QuackbackPosition.BOTTOM_LEFT,
-            buttonColor = "#FF0000", locale = "fr"
+            locale = "fr"
         )
         assertEquals(QuackbackTheme.DARK, c.theme)
         assertEquals(QuackbackPosition.BOTTOM_LEFT, c.placement)
-        assertEquals("#FF0000", c.buttonColor)
         assertEquals("fr", c.locale)
     }
     @Test fun `theme raw values`() {

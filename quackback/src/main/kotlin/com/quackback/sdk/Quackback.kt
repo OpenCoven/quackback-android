@@ -73,7 +73,7 @@ object Quackback {
         val cfg = config ?: return
         val act = currentActivity ?: return
         if (launcher != null) return
-        val color = cfg.buttonColor ?: resolveThemeColor()
+        val color = resolveThemeColor()
         launcher = LauncherButton(act, cfg.placement, color) { if (isShowing) close() else open() }.also { it.install() }
     }
 

@@ -8,7 +8,6 @@ data class QuackbackConfig(
     val instanceUrl: String,
     val theme: QuackbackTheme = QuackbackTheme.SYSTEM,
     val placement: QuackbackPosition = QuackbackPosition.BOTTOM_RIGHT,
-    val buttonColor: String? = null,
     val locale: String? = null,
 ) {
     val widgetURL: String get() = Uri.parse(instanceUrl).buildUpon()

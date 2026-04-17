@@ -118,7 +118,6 @@ Quackback.open(view = OpenView.CHANGELOG)
 | `instanceUrl` | `String` | required | Base URL of your Quackback instance. |
 | `theme` | `QuackbackTheme` | `SYSTEM` | `LIGHT`, `DARK`, or `SYSTEM` (follows device setting). |
 | `placement` | `QuackbackPosition` | `BOTTOM_RIGHT` | Position of the launcher button: `BOTTOM_RIGHT` or `BOTTOM_LEFT`. |
-| `buttonColor` | `String?` | `null` | Hex color for the launcher button (e.g. `"#2563EB"`). |
 | `locale` | `String?` | `null` | BCP 47 locale tag to override the widget language (e.g. `"fr"`). |
 
 ## Events
