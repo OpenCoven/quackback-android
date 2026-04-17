@@ -82,11 +82,22 @@ Quackback.open(board = "feature-requests")
 
 | Method | Description |
 |---|---|
-| `configure(context, config)` | Initialize the SDK. Call once in `Application.onCreate()`. |
+| `configure(context, config, identity?)` | Initialize the SDK. Pass an optional `Identity` to bundle identification into the same call. Call once in `Application.onCreate()`. |
 | `identify()` | Start an anonymous session. The widget prompts for an email inline the first time the user posts. |
 | `identify(userId, email, name?, avatarURL?)` | Identify the current user with attributes. |
 | `identify(ssoToken)` | Identify with a server-signed SSO token. Blocks impersonation. |
 | `logout()` | Clear the current user session. |
+
+### Identity
+
+Pass an `Identity` value to `configure(context, config, identity)` to bundle identification at setup time:
+
+```kotlin
+Quackback.configure(this, config, identity = Identity.User(id = "u_123", email = "a@b.com", name = "Ada"))
+Quackback.configure(this, config, identity = Identity.SsoToken("jwt..."))
+Quackback.configure(this, config, identity = Identity.Anonymous)
+// Or omit the parameter and call Quackback.identify(...) later.
+```
 | `open(board?)` | Open the feedback panel, optionally to a specific board slug. |
 | `close()` | Close the feedback panel. |
 | `showTrigger()` | Install the floating trigger button on the current activity. |

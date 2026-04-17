@@ -36,16 +36,25 @@ object Quackback {
         override fun onReady() { pendingIdentify?.let { wvManager?.execute(it); pendingIdentify = null } }
     }
 
-    fun configure(context: android.content.Context, config: QuackbackConfig) {
+    fun configure(context: android.content.Context, config: QuackbackConfig, identity: Identity? = null) {
         this.config = config
         (context.applicationContext as? Application)?.registerActivityLifecycleCallbacks(lifecycle)
         fetchTheme(config.baseURL)
+        if (identity != null) applyIdentity(identity)
     }
 
     fun identify() { enqueue(JSBridge.identifyAnonymousCommand()) }
     fun identify(ssoToken: String) { enqueue(JSBridge.identifyCommand(ssoToken = ssoToken)) }
     fun identify(userId: String, email: String, name: String? = null, avatarURL: String? = null) { enqueue(JSBridge.identifyCommand(userId, email, name, avatarURL)) }
     fun logout() { enqueue(JSBridge.logoutCommand()) }
+
+    private fun applyIdentity(identity: Identity) {
+        when (identity) {
+            is Identity.Anonymous -> identify()
+            is Identity.User -> identify(identity.id, identity.email, identity.name, identity.avatarURL)
+            is Identity.SsoToken -> identify(identity.token)
+        }
+    }
 
     fun open(board: String? = null) {
         val cfg = config ?: return
