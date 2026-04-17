@@ -39,7 +39,7 @@ object Quackback {
     fun configure(context: android.content.Context, config: QuackbackConfig, identity: Identity? = null) {
         this.config = config
         (context.applicationContext as? Application)?.registerActivityLifecycleCallbacks(lifecycle)
-        fetchTheme(config.baseURL)
+        fetchTheme(config.appUrl)
         if (identity != null) applyIdentity(identity)
     }
 
@@ -48,6 +48,12 @@ object Quackback {
     fun identify(userId: String, email: String, name: String? = null, avatarURL: String? = null) { enqueue(JSBridge.identifyCommand(userId, email, name, avatarURL)) }
     fun logout() { enqueue(JSBridge.logoutCommand()) }
 
+    /**
+     * Attach session metadata to feedback submitted through the widget.
+     * Pass `null` as a value to remove a previously-set key.
+     */
+    fun metadata(patch: Map<String, String?>) { enqueue(JSBridge.metadataCommand(patch)) }
+
     private fun applyIdentity(identity: Identity) {
         when (identity) {
             is Identity.User -> identify(identity.id, identity.email, identity.name, identity.avatarURL)
@@ -55,10 +61,10 @@ object Quackback {
         }
     }
 
-    fun open(board: String? = null) {
+    fun open(view: OpenView? = null, title: String? = null, board: String? = null) {
         val cfg = config ?: return
         val act = currentActivity ?: return
-        ensureWV(cfg); wvManager?.execute(JSBridge.openCommand(board)); present(act)
+        ensureWV(cfg); wvManager?.execute(JSBridge.openCommand(view, title, board)); present(act)
     }
 
     fun close() { dismiss() }
@@ -68,7 +74,7 @@ object Quackback {
         val act = currentActivity ?: return
         if (launcher != null) return
         val color = cfg.buttonColor ?: resolveThemeColor()
-        launcher = LauncherButton(act, cfg.position, color) { if (isShowing) close() else open() }.also { it.install() }
+        launcher = LauncherButton(act, cfg.placement, color) { if (isShowing) close() else open() }.also { it.install() }
     }
 
     fun hideLauncher() { launcher?.remove(); launcher = null }

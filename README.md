@@ -35,10 +35,7 @@ class MyApplication : Application() {
         super.onCreate()
         Quackback.configure(
             context = this,
-            config = QuackbackConfig(
-                appId = "YOUR_APP_ID",
-                baseURL = "https://feedback.yourapp.com"
-            )
+            config = QuackbackConfig(appUrl = "https://feedback.yourapp.com")
         )
     }
 }
@@ -87,6 +84,8 @@ Quackback.open(board = "feature-requests")
 | `identify(userId, email, name?, avatarURL?)` | Identify the current user with attributes. |
 | `identify(ssoToken)` | Identify with a server-signed SSO token. Blocks impersonation. |
 | `logout()` | Clear the current user session. |
+| `metadata(patch)` | Attach session metadata (`Map<String, String?>`) to feedback. Pass `null` values to remove keys. |
+| `open(view?, title?, board?)` | Open the panel. Use `OpenView.NEW_POST` with `title` to pre-fill the new-post form, `OpenView.CHANGELOG` for changelog, etc. |
 
 ### Identity
 
@@ -96,6 +95,13 @@ Pass an `Identity` value to `configure(context, config, identity)` to bundle ide
 Quackback.configure(this, config, identity = Identity.User(id = "u_123", email = "a@b.com", name = "Ada"))
 Quackback.configure(this, config, identity = Identity.SsoToken("jwt..."))
 // Omit the `identity` parameter for anonymous sessions — it's the default.
+
+// Session metadata — attach context to feedback submissions
+Quackback.metadata(mapOf("page" to "/settings", "app_version" to "2.4.1"))
+
+// Open with deep-link options
+Quackback.open(view = OpenView.NEW_POST, title = "Bug: crash on save", board = "bugs")
+Quackback.open(view = OpenView.CHANGELOG)
 ```
 | `open(board?)` | Open the feedback panel, optionally to a specific board slug. |
 | `close()` | Close the feedback panel. |
@@ -109,10 +115,9 @@ Quackback.configure(this, config, identity = Identity.SsoToken("jwt..."))
 
 | Property | Type | Default | Description |
 |---|---|---|---|
-| `appId` | `String` | required | Your Quackback app ID. |
-| `baseURL` | `String` | required | Base URL of your Quackback instance. |
+| `appUrl` | `String` | required | Base URL of your Quackback instance. |
 | `theme` | `QuackbackTheme` | `SYSTEM` | `LIGHT`, `DARK`, or `SYSTEM` (follows device setting). |
-| `position` | `QuackbackPosition` | `BOTTOM_RIGHT` | Position of the launcher button: `BOTTOM_RIGHT` or `BOTTOM_LEFT`. |
+| `placement` | `QuackbackPosition` | `BOTTOM_RIGHT` | Position of the launcher button: `BOTTOM_RIGHT` or `BOTTOM_LEFT`. |
 | `buttonColor` | `String?` | `null` | Hex color for the launcher button (e.g. `"#2563EB"`). |
 | `locale` | `String?` | `null` | BCP 47 locale tag to override the widget language (e.g. `"fr"`). |
 

@@ -1,4 +1,5 @@
 package com.quackback.sdk.internal
+import com.quackback.sdk.OpenView
 import com.quackback.sdk.QuackbackConfig
 import com.quackback.sdk.QuackbackEvent
 import org.json.JSONObject
@@ -7,7 +8,7 @@ internal data class ParsedEvent(val event: QuackbackEvent, val data: Map<String,
 
 internal object JSBridge {
     fun initCommand(config: QuackbackConfig): String {
-        val p = JSONObject().apply { put("appId", config.appId); put("theme", config.theme.value); config.locale?.let { put("locale", it) } }
+        val p = JSONObject().apply { put("theme", config.theme.value); config.locale?.let { put("locale", it) } }
         return "window.postMessage({type:'quackback:init',data:$p},'*');"
     }
     fun localeCommand(locale: String): String =
@@ -25,14 +26,21 @@ internal object JSBridge {
         val p = JSONObject().apply { put("anonymous", true) }
         return "window.postMessage({type:'quackback:identify',data:$p},'*');"
     }
-    fun openCommand(board: String?): String {
-        if (board != null) {
-            val p = JSONObject().apply { put("board", board) }
-            return "window.postMessage({type:'quackback:open',data:$p},'*');"
-        }
-        return "window.postMessage({type:'quackback:open'},'*');"
+    fun openCommand(view: OpenView? = null, title: String? = null, board: String? = null): String {
+        val p = JSONObject()
+        view?.let { p.put("view", it.value) }
+        title?.let { p.put("title", it) }
+        board?.let { p.put("board", it) }
+        if (p.length() == 0) return "window.postMessage({type:'quackback:open'},'*');"
+        return "window.postMessage({type:'quackback:open',data:$p},'*');"
     }
     fun logoutCommand() = "window.postMessage({type:'quackback:identify',data:null},'*');"
+    fun metadataCommand(patch: Map<String, String?>): String {
+        val obj = JSONObject()
+        for ((k, v) in patch) obj.put(k, v ?: JSONObject.NULL)
+        return "window.postMessage({type:'quackback:metadata',data:$obj},'*');"
+    }
+
     fun parseEvent(json: String): ParsedEvent? {
         return try {
             val obj = JSONObject(json)

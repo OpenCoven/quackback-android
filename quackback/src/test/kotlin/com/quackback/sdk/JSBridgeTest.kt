@@ -8,10 +8,13 @@ import org.robolectric.RobolectricTestRunner
 @RunWith(RobolectricTestRunner::class)
 class JSBridgeTest {
     @Test fun `init command`() {
-        val c = QuackbackConfig(appId = "a", baseURL = "https://x.com", theme = QuackbackTheme.DARK, locale = "fr")
+        val c = QuackbackConfig(appUrl = "https://x.com", theme = QuackbackTheme.DARK, locale = "fr")
         val js = JSBridge.initCommand(c)
-        assertTrue(js.contains("window.postMessage")); assertTrue(js.contains("quackback:init"))
-        assertTrue(js.contains("\"appId\":\"a\"")); assertTrue(js.contains("\"theme\":\"dark\""))
+        assertTrue(js.contains("window.postMessage"))
+        assertTrue(js.contains("quackback:init"))
+        assertTrue(js.contains("\"theme\":\"dark\""))
+        assertTrue(js.contains("\"locale\":\"fr\""))
+        assertFalse(js.contains("appId"))
     }
     @Test fun `identify SSO`() {
         val js = JSBridge.identifyCommand(ssoToken = "t")
@@ -29,25 +32,43 @@ class JSBridgeTest {
         assertTrue(js.contains("\"anonymous\":true"))
     }
     @Test fun `open with board`() {
-        val js = JSBridge.openCommand("bugs")
+        val js = JSBridge.openCommand(board = "bugs")
         assertTrue(js.contains("window.postMessage")); assertTrue(js.contains("quackback:open"))
         assertTrue(js.contains("\"board\":\"bugs\""))
     }
-    @Test fun `open nil`() { assertEquals("window.postMessage({type:'quackback:open'},'*');", JSBridge.openCommand(null)) }
+    @Test fun `open with view`() {
+        val js = JSBridge.openCommand(view = OpenView.NEW_POST, title = "Bug:")
+        assertTrue(js.contains("\"view\":\"new-post\""))
+        assertTrue(js.contains("\"title\":\"Bug:\""))
+    }
+    @Test fun `open empty`() {
+        assertEquals("window.postMessage({type:'quackback:open'},'*');", JSBridge.openCommand())
+    }
     @Test fun `logout`() { assertEquals("window.postMessage({type:'quackback:identify',data:null},'*');", JSBridge.logoutCommand()) }
+    @Test fun `metadata command`() {
+        val js = JSBridge.metadataCommand(mapOf("page" to "/settings", "version" to "2.4.1"))
+        assertTrue(js.contains("quackback:metadata"))
+        assertTrue(js.contains("\"page\":\"\\/settings\"") || js.contains("\"page\":\"/settings\""))
+        assertTrue(js.contains("\"version\":\"2.4.1\""))
+    }
+    @Test fun `metadata remove key`() {
+        val js = JSBridge.metadataCommand(mapOf("stale" to null))
+        assertTrue(js.contains("quackback:metadata"))
+        assertTrue(js.contains("\"stale\":null"))
+    }
     @Test fun `parse vote`() {
         val p = JSBridge.parseEvent("""{"event":"vote","data":{"type":"quackback:event","payload":{"postId":"p1"}}}""")!!
         assertEquals(QuackbackEvent.VOTE, p.event); assertEquals("p1", p.data["postId"])
     }
     @Test fun `parse invalid`() { assertNull(JSBridge.parseEvent("bad")) }
     @Test fun `init without locale`() {
-        val c = QuackbackConfig(appId = "a", baseURL = "https://x.com", theme = QuackbackTheme.LIGHT)
+        val c = QuackbackConfig(appUrl = "https://x.com", theme = QuackbackTheme.LIGHT)
         val js = JSBridge.initCommand(c)
         assertTrue(js.contains("\"theme\":\"light\""))
         assertFalse(js.contains("locale"))
     }
     @Test fun `init system theme`() {
-        val c = QuackbackConfig(appId = "a", baseURL = "https://x.com")
+        val c = QuackbackConfig(appUrl = "https://x.com")
         assertTrue(JSBridge.initCommand(c).contains("\"theme\":\"user\""))
     }
     @Test fun `identify attrs with avatarURL`() {
@@ -82,18 +103,20 @@ class JSBridgeTest {
         assertTrue(JSBridge.bridgeScript.contains("QuackbackBridge"))
     }
     @Test fun `commands end with semicolon`() {
-        val c = QuackbackConfig(appId = "x", baseURL = "https://x.com")
+        val c = QuackbackConfig(appUrl = "https://x.com")
         assertTrue(JSBridge.initCommand(c).endsWith(";"))
         assertTrue(JSBridge.identifyCommand(ssoToken = "t").endsWith(";"))
-        assertTrue(JSBridge.openCommand("b").endsWith(";"))
-        assertTrue(JSBridge.openCommand(null).endsWith(";"))
+        assertTrue(JSBridge.openCommand(board = "b").endsWith(";"))
+        assertTrue(JSBridge.openCommand().endsWith(";"))
         assertTrue(JSBridge.logoutCommand().endsWith(";"))
+        assertTrue(JSBridge.metadataCommand(mapOf("k" to "v")).endsWith(";"))
     }
     @Test fun `commands start with postMessage`() {
-        val c = QuackbackConfig(appId = "x", baseURL = "https://x.com")
+        val c = QuackbackConfig(appUrl = "https://x.com")
         assertTrue(JSBridge.initCommand(c).startsWith("window.postMessage("))
         assertTrue(JSBridge.identifyCommand(ssoToken = "t").startsWith("window.postMessage("))
-        assertTrue(JSBridge.openCommand(null).startsWith("window.postMessage("))
+        assertTrue(JSBridge.openCommand().startsWith("window.postMessage("))
         assertTrue(JSBridge.logoutCommand().startsWith("window.postMessage("))
+        assertTrue(JSBridge.metadataCommand(mapOf("k" to "v")).startsWith("window.postMessage("))
     }
 }
