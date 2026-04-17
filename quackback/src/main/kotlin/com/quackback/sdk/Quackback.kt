@@ -42,9 +42,9 @@ object Quackback {
         fetchTheme(config.baseURL)
     }
 
+    fun identify() { enqueue(JSBridge.identifyAnonymousCommand()) }
     fun identify(ssoToken: String) { enqueue(JSBridge.identifyCommand(ssoToken = ssoToken)) }
     fun identify(userId: String, email: String, name: String? = null, avatarURL: String? = null) { enqueue(JSBridge.identifyCommand(userId, email, name, avatarURL)) }
-    fun identifyAnonymous() { enqueue(JSBridge.identifyAnonymousCommand()) }
     fun logout() { enqueue(JSBridge.logoutCommand()) }
 
     fun open(board: String? = null) {

@@ -58,7 +58,7 @@ Quackback.identify(
 Quackback.identify(ssoToken = "your-sso-token")
 
 // Or anonymously — the widget prompts for an email inline
-Quackback.identifyAnonymous()
+Quackback.identify()
 ```
 
 ### 3. Show the floating trigger button
@@ -83,9 +83,9 @@ Quackback.open(board = "feature-requests")
 | Method | Description |
 |---|---|
 | `configure(context, config)` | Initialize the SDK. Call once in `Application.onCreate()`. |
+| `identify()` | Start an anonymous session. The widget prompts for an email inline the first time the user posts. |
 | `identify(userId, email, name?, avatarURL?)` | Identify the current user with attributes. |
 | `identify(ssoToken)` | Identify with a server-signed SSO token. Blocks impersonation. |
-| `identifyAnonymous()` | Start an anonymous session. The widget prompts for an email inline the first time the user posts. |
 | `logout()` | Clear the current user session. |
 | `open(board?)` | Open the feedback panel, optionally to a specific board slug. |
 | `close()` | Close the feedback panel. |
