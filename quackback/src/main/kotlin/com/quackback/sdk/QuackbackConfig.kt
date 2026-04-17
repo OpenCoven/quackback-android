@@ -5,13 +5,13 @@ enum class QuackbackTheme(val value: String) { LIGHT("light"), DARK("dark"), SYS
 enum class QuackbackPosition { BOTTOM_RIGHT, BOTTOM_LEFT }
 
 data class QuackbackConfig(
-    val appUrl: String,
+    val instanceUrl: String,
     val theme: QuackbackTheme = QuackbackTheme.SYSTEM,
     val placement: QuackbackPosition = QuackbackPosition.BOTTOM_RIGHT,
     val buttonColor: String? = null,
     val locale: String? = null,
 ) {
-    val widgetURL: String get() = Uri.parse(appUrl).buildUpon()
+    val widgetURL: String get() = Uri.parse(instanceUrl).buildUpon()
         .path("/widget")
         .appendQueryParameter("source", "native")
         .appendQueryParameter("platform", "android")

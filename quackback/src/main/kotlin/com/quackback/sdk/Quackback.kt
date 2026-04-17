@@ -39,7 +39,7 @@ object Quackback {
     fun configure(context: android.content.Context, config: QuackbackConfig, identity: Identity? = null) {
         this.config = config
         (context.applicationContext as? Application)?.registerActivityLifecycleCallbacks(lifecycle)
-        fetchTheme(config.appUrl)
+        fetchTheme(config.instanceUrl)
         if (identity != null) applyIdentity(identity)
     }
 
@@ -98,10 +98,10 @@ object Quackback {
         }
     }
 
-    private fun fetchTheme(baseURL: String) {
+    private fun fetchTheme(instanceUrl: String) {
         Thread {
             try {
-                val url = URL("$baseURL/api/widget/config.json")
+                val url = URL("$instanceUrl/api/widget/config.json")
                 val conn = url.openConnection() as HttpURLConnection
                 conn.connectTimeout = 5000
                 conn.readTimeout = 5000

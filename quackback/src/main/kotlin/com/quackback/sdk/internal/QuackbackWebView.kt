@@ -25,7 +25,7 @@ internal class QuackbackWebViewManager(private val config: QuackbackConfig) {
                 override fun onPageStarted(v: WebView?, u: String?, f: android.graphics.Bitmap?) { v?.evaluateJavascript(JSBridge.bridgeScript, null) }
                 override fun shouldOverrideUrlLoading(v: WebView?, r: WebResourceRequest?): Boolean {
                     val url = r?.url ?: return false
-                    if (url.host != Uri.parse(config.appUrl).host) { ctx.startActivity(Intent(Intent.ACTION_VIEW, url)); return true }
+                    if (url.host != Uri.parse(config.instanceUrl).host) { ctx.startActivity(Intent(Intent.ACTION_VIEW, url)); return true }
                     return false
                 }
             }

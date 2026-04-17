@@ -8,7 +8,7 @@ import org.robolectric.RobolectricTestRunner
 @RunWith(RobolectricTestRunner::class)
 class JSBridgeTest {
     @Test fun `init command`() {
-        val c = QuackbackConfig(appUrl = "https://x.com", theme = QuackbackTheme.DARK, locale = "fr")
+        val c = QuackbackConfig(instanceUrl = "https://x.com", theme = QuackbackTheme.DARK, locale = "fr")
         val js = JSBridge.initCommand(c)
         assertTrue(js.contains("window.postMessage"))
         assertTrue(js.contains("quackback:init"))
@@ -62,13 +62,13 @@ class JSBridgeTest {
     }
     @Test fun `parse invalid`() { assertNull(JSBridge.parseEvent("bad")) }
     @Test fun `init without locale`() {
-        val c = QuackbackConfig(appUrl = "https://x.com", theme = QuackbackTheme.LIGHT)
+        val c = QuackbackConfig(instanceUrl = "https://x.com", theme = QuackbackTheme.LIGHT)
         val js = JSBridge.initCommand(c)
         assertTrue(js.contains("\"theme\":\"light\""))
         assertFalse(js.contains("locale"))
     }
     @Test fun `init system theme`() {
-        val c = QuackbackConfig(appUrl = "https://x.com")
+        val c = QuackbackConfig(instanceUrl = "https://x.com")
         assertTrue(JSBridge.initCommand(c).contains("\"theme\":\"user\""))
     }
     @Test fun `identify attrs with avatarURL`() {
@@ -103,7 +103,7 @@ class JSBridgeTest {
         assertTrue(JSBridge.bridgeScript.contains("QuackbackBridge"))
     }
     @Test fun `commands end with semicolon`() {
-        val c = QuackbackConfig(appUrl = "https://x.com")
+        val c = QuackbackConfig(instanceUrl = "https://x.com")
         assertTrue(JSBridge.initCommand(c).endsWith(";"))
         assertTrue(JSBridge.identifyCommand(ssoToken = "t").endsWith(";"))
         assertTrue(JSBridge.openCommand(board = "b").endsWith(";"))
@@ -112,7 +112,7 @@ class JSBridgeTest {
         assertTrue(JSBridge.metadataCommand(mapOf("k" to "v")).endsWith(";"))
     }
     @Test fun `commands start with postMessage`() {
-        val c = QuackbackConfig(appUrl = "https://x.com")
+        val c = QuackbackConfig(instanceUrl = "https://x.com")
         assertTrue(JSBridge.initCommand(c).startsWith("window.postMessage("))
         assertTrue(JSBridge.identifyCommand(ssoToken = "t").startsWith("window.postMessage("))
         assertTrue(JSBridge.openCommand().startsWith("window.postMessage("))

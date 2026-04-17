@@ -35,7 +35,7 @@ class MyApplication : Application() {
         super.onCreate()
         Quackback.configure(
             context = this,
-            config = QuackbackConfig(appUrl = "https://feedback.yourapp.com")
+            config = QuackbackConfig(instanceUrl = "https://feedback.yourapp.com")
         )
     }
 }
@@ -115,7 +115,7 @@ Quackback.open(view = OpenView.CHANGELOG)
 
 | Property | Type | Default | Description |
 |---|---|---|---|
-| `appUrl` | `String` | required | Base URL of your Quackback instance. |
+| `instanceUrl` | `String` | required | Base URL of your Quackback instance. |
 | `theme` | `QuackbackTheme` | `SYSTEM` | `LIGHT`, `DARK`, or `SYSTEM` (follows device setting). |
 | `placement` | `QuackbackPosition` | `BOTTOM_RIGHT` | Position of the launcher button: `BOTTOM_RIGHT` or `BOTTOM_LEFT`. |
 | `buttonColor` | `String?` | `null` | Hex color for the launcher button (e.g. `"#2563EB"`). |
