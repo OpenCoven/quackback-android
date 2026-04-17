@@ -50,7 +50,6 @@ object Quackback {
 
     private fun applyIdentity(identity: Identity) {
         when (identity) {
-            is Identity.Anonymous -> identify()
             is Identity.User -> identify(identity.id, identity.email, identity.name, identity.avatarURL)
             is Identity.SsoToken -> identify(identity.token)
         }

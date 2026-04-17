@@ -95,8 +95,7 @@ Pass an `Identity` value to `configure(context, config, identity)` to bundle ide
 ```kotlin
 Quackback.configure(this, config, identity = Identity.User(id = "u_123", email = "a@b.com", name = "Ada"))
 Quackback.configure(this, config, identity = Identity.SsoToken("jwt..."))
-Quackback.configure(this, config, identity = Identity.Anonymous)
-// Or omit the parameter and call Quackback.identify(...) later.
+// Omit the `identity` parameter for anonymous sessions — it's the default.
 ```
 | `open(board?)` | Open the feedback panel, optionally to a specific board slug. |
 | `close()` | Close the feedback panel. |
