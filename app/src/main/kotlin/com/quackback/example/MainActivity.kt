@@ -11,7 +11,7 @@ class MainActivity : AppCompatActivity() {
         val layout = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; setPadding(48, 48, 48, 48) }
         layout.addView(Button(this).apply { text = "Open Feedback"; setOnClickListener { Quackback.open() } })
         layout.addView(Button(this).apply { text = "Feature Requests"; setOnClickListener { Quackback.open(board = "feature-requests") } })
-        layout.addView(Button(this).apply { text = "Show Trigger"; setOnClickListener { Quackback.showTrigger() } })
+        layout.addView(Button(this).apply { text = "Show Launcher"; setOnClickListener { Quackback.showLauncher() } })
         setContentView(layout)
     }
 }

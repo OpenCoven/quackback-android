@@ -12,7 +12,7 @@ import android.widget.ImageView
 import com.quackback.sdk.QuackbackPosition
 import com.quackback.sdk.R
 
-internal class TriggerButton(
+internal class LauncherButton(
     private val activity: Activity, private val position: QuackbackPosition,
     color: String?, private val onClick: () -> Unit
 ) {

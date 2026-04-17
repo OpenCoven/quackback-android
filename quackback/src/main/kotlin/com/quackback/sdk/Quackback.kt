@@ -11,7 +11,7 @@ import java.net.URL
 object Quackback {
     private var config: QuackbackConfig? = null
     private var wvManager: QuackbackWebViewManager? = null
-    private var trigger: TriggerButton? = null
+    private var launcher: LauncherButton? = null
     private var panel: PanelBottomSheet? = null
     private val emitter = EventEmitter()
     private var isShowing = false
@@ -63,20 +63,20 @@ object Quackback {
 
     fun close() { dismiss() }
 
-    fun showTrigger() {
+    fun showLauncher() {
         val cfg = config ?: return
         val act = currentActivity ?: return
-        if (trigger != null) return
+        if (launcher != null) return
         val color = cfg.buttonColor ?: resolveThemeColor()
-        trigger = TriggerButton(act, cfg.position, color) { if (isShowing) close() else open() }.also { it.install() }
+        launcher = LauncherButton(act, cfg.position, color) { if (isShowing) close() else open() }.also { it.install() }
     }
 
-    fun hideTrigger() { trigger?.remove(); trigger = null }
+    fun hideLauncher() { launcher?.remove(); launcher = null }
     fun on(event: QuackbackEvent, handler: EventListener) = emitter.on(event, handler)
     fun off(token: EventToken) { emitter.off(token) }
 
     fun destroy() {
-        dismiss(); hideTrigger(); wvManager?.tearDown(); wvManager = null
+        dismiss(); hideLauncher(); wvManager?.tearDown(); wvManager = null
         emitter.removeAll(); config = null; pendingIdentify = null; serverTheme = null
         (currentActivity?.applicationContext as? Application)?.unregisterActivityLifecycleCallbacks(lifecycle)
         currentActivity = null
@@ -88,7 +88,7 @@ object Quackback {
         return when (cfg.theme) {
             QuackbackTheme.LIGHT -> theme.lightPrimary
             QuackbackTheme.DARK -> theme.darkPrimary
-            QuackbackTheme.SYSTEM -> theme.lightPrimary // TriggerButton uses this as default
+            QuackbackTheme.SYSTEM -> theme.lightPrimary // LauncherButton uses this as default
         }
     }
 
@@ -109,9 +109,9 @@ object Quackback {
                             lightPrimary = t.optString("lightPrimary", "#6366f1"),
                             darkPrimary = t.optString("darkPrimary", "#6366f1"),
                         )
-                        // Update trigger if already showing
+                        // Update launcher if already showing
                         currentActivity?.runOnUiThread {
-                            trigger?.updateColor(resolveThemeColor())
+                            launcher?.updateColor(resolveThemeColor())
                         }
                     }
                 }
@@ -127,9 +127,9 @@ object Quackback {
 
     private fun present(act: Activity) {
         if (isShowing) return; val m = wvManager ?: return; val fa = act as? FragmentActivity ?: return; m.loadIfNeeded(act)
-        val sheet = PanelBottomSheet(m).also { it.onDismissed = { isShowing = false; trigger?.setOpen(false); panel = null } }
-        sheet.show(fa.supportFragmentManager, "quackback"); isShowing = true; trigger?.setOpen(true); panel = sheet
+        val sheet = PanelBottomSheet(m).also { it.onDismissed = { isShowing = false; launcher?.setOpen(false); panel = null } }
+        sheet.show(fa.supportFragmentManager, "quackback"); isShowing = true; launcher?.setOpen(true); panel = sheet
     }
 
-    private fun dismiss() { panel?.dismiss(); panel = null; isShowing = false; trigger?.setOpen(false) }
+    private fun dismiss() { panel?.dismiss(); panel = null; isShowing = false; launcher?.setOpen(false) }
 }

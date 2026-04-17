@@ -61,11 +61,11 @@ Quackback.identify(ssoToken = "your-sso-token")
 Quackback.identify()
 ```
 
-### 3. Show the floating trigger button
+### 3. Show the floating launcher button
 
 ```kotlin
 // In your Activity
-Quackback.showTrigger()
+Quackback.showLauncher()
 ```
 
 ### 4. Open programmatically
@@ -99,8 +99,8 @@ Quackback.configure(this, config, identity = Identity.SsoToken("jwt..."))
 ```
 | `open(board?)` | Open the feedback panel, optionally to a specific board slug. |
 | `close()` | Close the feedback panel. |
-| `showTrigger()` | Install the floating trigger button on the current activity. |
-| `hideTrigger()` | Remove the floating trigger button. |
+| `showLauncher()` | Install the floating launcher button on the current activity. |
+| `hideLauncher()` | Remove the floating launcher button. |
 | `on(event, handler)` | Subscribe to an event. Returns an `EventToken`. |
 | `off(token)` | Unsubscribe using the token returned by `on`. |
 | `destroy()` | Tear down all SDK state (useful in tests or on sign-out). |
@@ -112,8 +112,8 @@ Quackback.configure(this, config, identity = Identity.SsoToken("jwt..."))
 | `appId` | `String` | required | Your Quackback app ID. |
 | `baseURL` | `String` | required | Base URL of your Quackback instance. |
 | `theme` | `QuackbackTheme` | `SYSTEM` | `LIGHT`, `DARK`, or `SYSTEM` (follows device setting). |
-| `position` | `QuackbackPosition` | `BOTTOM_RIGHT` | Position of the trigger button: `BOTTOM_RIGHT` or `BOTTOM_LEFT`. |
-| `buttonColor` | `String?` | `null` | Hex color for the trigger button (e.g. `"#2563EB"`). |
+| `position` | `QuackbackPosition` | `BOTTOM_RIGHT` | Position of the launcher button: `BOTTOM_RIGHT` or `BOTTOM_LEFT`. |
+| `buttonColor` | `String?` | `null` | Hex color for the launcher button (e.g. `"#2563EB"`). |
 | `locale` | `String?` | `null` | BCP 47 locale tag to override the widget language (e.g. `"fr"`). |
 
 ## Events
